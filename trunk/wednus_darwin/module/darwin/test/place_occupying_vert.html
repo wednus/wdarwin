@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Test - place occupying (horizontal)</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+// define world
+var world = new W.World({
+    top: 10,
+    left: 12,
+    cols: 2,
+    rows: 5
+});
+world.showGrid(true);
+world.delay = 5;
+oracle.add(world);
+
+// define creatures
+var creature = new W.Creature({
+  act: 'walk',
+  uwidth: 2,
+  uheight: 2
+});
+// add skills
+creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+}));
+
+world.add(creature.clone(), 0, 0);
+world.add(creature.clone(), 3, 0);
+</script>
+</head>
+<body style='background:black'>
+</body></html>
