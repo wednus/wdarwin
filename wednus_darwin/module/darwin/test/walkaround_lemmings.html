@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+// define a world
+var world = new W.World({
+   unit: 32, // pixels per unit
+   cols: 3,
+   rows: 3
+});
+world.showGrid(true);
+world.delay = 6;
+oracle.add(world);
+oracle.showClock(true);
+
+// define a creature
+var lemming = new W.Creature({
+  act: 'walk',
+  dir: 'east',
+  speed: 2
+});
+
+// add skills
+lemming.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/lemming/lemming_walk.gif',
+  north: '64:0,64:32,64:64,64:96,64:0,64:32,64:64,64:96',
+  east:  '32:0,32:32,32:64,32:96,32:128,32:160,32:192,32:224',
+  south: '96:0,96:32,96:64,96:96,96:0,96:32,96:64,96:96',
+  west:  '0:0,0:32,0:64,0:96,0:128,0:160,0:192,0:224'
+}));
+
+// add to world
+for(var i = 0; i < 6; ++i){
+  world.add(lemming.clone());
+}
+</script>
+</head>
+<body style='background:black'>
+</body></html>

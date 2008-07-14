@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+// define a world
+var world = new W.World({
+   unit: 32, // pixels per unit
+   cols: 3,
+   rows: 3
+});
+world.showGrid(true);
+world.delay = 10;
+oracle.add(world);
+oracle.showClock(true);
+
+// helper function
+function character(name){
+  // define a creature
+  var creature = new W.Creature({
+    act: 'walk',
+    dir: 'south',
+    speed: 2
+  });
+  // add skills
+  creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/reymond/'+ name +'.gif',
+    north: '0:0',
+    east:  '0:32',
+    south: '32:0',
+    west:  '32:32'
+  }));
+  return creature;
+};
+
+// add to world
+world.add(character('boy'));
+//world.add(character('girl'));
+//world.add(character('man'));
+//world.add(character('woman'));
+</script>
+</head>
+<body style='background:black'>
+</body></html>

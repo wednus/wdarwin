@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=320; user-scalable=false" />
+<title>Wednus Darwin on iPhone </title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+// define world
+// iphone dimension: 320 x 480
+var world = new W.World({
+  left: 4,
+  cols: 13,
+  rows: 20,
+  image: 'module/darwin/test/image/iphone/spirals.jpg'
+});
+//world.showGrid(true);
+oracle.add(world);
+
+// define creatures
+var human = new W.Creature({
+  act: 'walk',
+  speed: 6,
+  col: 11,
+  row: 18,
+  uwidth: 2,
+  uheight: 2
+});
+
+// add skills
+human.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+}));
+
+var turtlex = new W.Creature({
+  act: 'walk',
+  dir: 'south',
+  speed: 3,
+  uwidth: 2,
+  uheight: 2
+});
+
+// add skills
+turtlex.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+}));
+
+for(var i = 0; i < 5; ++i){
+  world.add(turtlex.clone());
+  world.add(human.clone());
+}
+</script>
+</head>
+<body style='background:black'>
+</body></html>
