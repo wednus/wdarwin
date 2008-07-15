@@ -30,6 +30,11 @@ creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/reymond/b
   west:  '32:32'
 }));
 
+// define the creature algorithm
+creature.algo = function(creature){
+  this.doAtoB(this.skills['walk']);
+};
+
 // add to world
 world.add(creature);
 </script>

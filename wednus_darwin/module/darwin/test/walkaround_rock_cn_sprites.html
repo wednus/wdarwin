@@ -36,6 +36,22 @@ boy.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/rock_cn_sprite
   south: '330:50,330:100,330:50,330:150,330:200,330:150',
   west:  '530:150,530:100,530:150,530:50,530:0,530:50'
 }));
+boy.add(new W.Skill({name: 'turn', img: 'module/darwin/test/image/rock_cn_sprites/rockchinesesprites.gif',
+  north: '430:50',
+  east:  '630:50',
+  south: '330:50',
+  west:  '530:150',
+  to: function(dir){
+    this.creature.dir = this.creature.getAbsDir(dir);
+  }  
+}));
+
+// define the creature algorithm
+boy.algo = function(creature){
+  if(!creature){
+    this.doAtoB(this.skills['walk']);
+  }else this.doAtoB(this.skills['turn'], 'left');
+};
 
 // add to world
 world.add(boy);

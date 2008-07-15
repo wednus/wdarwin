@@ -40,6 +40,12 @@ human.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
   west:  '144:0,144:48,144:96'
 }));
 
+// define the creature algorithm
+human.algo = function(creature){
+  this.doAtoB(this.skills['walk']);
+};
+
+
 var turtlex = new W.Creature({
   act: 'walk',
   dir: 'south',
@@ -55,6 +61,11 @@ turtlex.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/wal
   south: '96:0,96:48,96:96',
   west:  '144:0,144:48,144:96'
 }));
+
+// define the creature algorithm
+turtlex.algo = function(creature){
+  this.doAtoB(this.skills['walk']);
+};
 
 for(var i = 0; i < 5; ++i){
   world.add(turtlex.clone());
