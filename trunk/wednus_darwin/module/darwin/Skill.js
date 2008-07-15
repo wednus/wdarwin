@@ -3,7 +3,7 @@
  *
  * This file contains the class definition of the W.Skill.
  * @author Sundew H. Shin
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 /**
@@ -13,7 +13,7 @@
  * Creature.
  * @param {Object} args extend/override constructor w/ this passed args object
  */
-W.Skill = function(args){
+W.Skill = function(args){var self = this;
   // default action
   this.name = 'hide';
   this.img = 'module/darwin/image/blank.gif';
@@ -24,6 +24,9 @@ W.Skill = function(args){
 
   this.dir = 'south';  // current direction
   this.frame = 0;  // current frame
+  // skill specific behavior definication
+  this.to = function(arg){};
+  
   // extend/override constructor w/ passed args object
   for(var i in args)
     eval('this.'+ i +' = args["'+ i +'"];');
@@ -62,6 +65,9 @@ W.Skill.prototype.animate = function(){
   if(this.frame >= this[this.dir].length - 1){
     this.frame = 0;
   }else ++this.frame;
+  
+  //window.status = 'dir:'+ this.creature.dir +', this.frame:'+ this.frame;
+  
   // flip frame
   this.creature.img.style.top = -this[this.creature.dir][this.frame].top +'px';
   this.creature.img.style.left = -this[this.creature.dir][this.frame].left +'px';

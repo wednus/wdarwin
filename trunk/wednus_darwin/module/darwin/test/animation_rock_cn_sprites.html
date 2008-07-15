@@ -36,6 +36,11 @@ boy.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/rock_cn_sprite
   west:  '530:150,530:100,530:150,530:50,530:0,530:50'
 }));
 
+// define the creature algorithm
+boy.algo = function(creature){
+  this.doAtoB(this.skills['walk']);
+};
+
 // add to world
 world.add(boy);
 </script>

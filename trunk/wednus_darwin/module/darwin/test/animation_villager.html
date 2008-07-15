@@ -35,6 +35,11 @@ villager.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/
   west:  '48:4,48:36,48:68,48:98'
 }));
 
+// define the creature algorithm
+villager.algo = function(creature){
+  this.doAtoB(this.skills['walk']);
+};
+
 // add to world
 world.add(villager);
 </script>

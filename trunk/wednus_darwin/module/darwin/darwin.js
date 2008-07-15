@@ -22,7 +22,7 @@ W.load('module/darwin', 'Oracle,World,Skill,Creature,instructions', 'module');
 /**
 \mainpage
 \section version Version
-0.1.1
+0.2.0
 \section author Author
 Sundew H. Shin - <a href='http://wednus.com'>Wednus Project</a>
 <hr>
@@ -37,8 +37,6 @@ interact each other.
 - <b>W.Skill class</b> - The Skill defines a prototype of an animation action of Creature
 - <b>W.Creature class</b> - The Creature defines a prototype of common creature
 residing in a world.
-- <b>instructions.js</b> - It contains the set of instructions defines the behavior
-of the Creature reacting given stimuli. (e.g. meet other creature)
 
 <hr>
 \section diagram Architecture

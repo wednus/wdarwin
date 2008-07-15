@@ -35,6 +35,22 @@ villager.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/
   south: '0:4,0:36,0:68,0:98',
   west:  '48:4,48:36,48:68,48:98'
 }));
+villager.add(new W.Skill({name: 'turn', img: 'module/darwin/test/image/uiv2.com/villager.png',
+  north: '144:4',
+  east:  '96:4',
+  south: '0:4',
+  west:  '48:4',
+  to: function(dir){
+    this.creature.dir = this.creature.getAbsDir(dir);
+  }
+}));
+
+// define the creature algorithm
+villager.algo = function(creature){
+  if(!creature){
+    this.doAtoB(this.skills['walk']);
+  }else this.doAtoB(this.skills['turn'], 'left');
+};
 
 // add to world
 world.add(villager);

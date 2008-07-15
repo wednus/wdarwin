@@ -27,16 +27,21 @@ var lemming = new W.Creature({
 });
 
 // add skills
-lemming.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/lemming/lemming_walk.gif',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/lemming/lemming_walk.gif',
   north: '64:0,64:32,64:64,64:96,64:0,64:32,64:64,64:96',
   east:  '32:0,32:32,32:64,32:96,32:128,32:160,32:192,32:224',
   south: '96:0,96:32,96:64,96:96,96:0,96:32,96:64,96:96',
   west:  '0:0,0:32,0:64,0:96,0:128,0:160,0:192,0:224'
-}));
+});
+lemming.add(walk);
 
 document.body.appendChild(lemming.body);
 lemming.resize(24);
-lemming.action();
+
+// define the creature algorithm
+lemming.algo = function(creature){
+  this.doAtoB(walk);
+};
 
 // add to world
 world.add(lemming);

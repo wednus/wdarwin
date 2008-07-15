@@ -6,7 +6,7 @@
  * such as the instances of the W.World class; All world instances of an oracle
  * shares only one clock.
  * @author Sundew H. Shin
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 /**

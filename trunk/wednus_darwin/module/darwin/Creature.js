@@ -3,7 +3,7 @@
  *
  * This file contains the class definition of the W.Creature.
  * @author Sundew H. Shin
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 /**
@@ -37,11 +37,13 @@ W.Creature = function(args){var self = this;
   this.actQueue = [];
   this.skills = [];
   this.add(new W.Skill());
+  // creature-algorithm
+  this.algo = function(){};
   // visual components
   this.img = document.createElement('img');
   this.img.title = this.id + ' : '+ this.name;
   this.img = W.style('img', 'position:absolute;left:-1000px;');
-  this.body = W.style('div', 'position:absolute;top:0px;left:0px;overflow:hidden;background:navy;');
+  this.body = W.style('div', 'position:absolute;top:0px;left:0px;overflow:hidden;');
   this.body.appendChild(this.img);
 
   /**
@@ -105,249 +107,166 @@ W.Creature.prototype.clone = function(){
 /**
  * perform current action
  *
- * @param {String} name of the target skill
+ * @test <a href='../../test/Creature_algo.html'>Creature.algo()</a>
  * @test <a href='../../test/place_occupying_hori.html'>test changeCol</a>
  * @test <a href='../../test/place_occupying_vert.html'>test changeRow</a>
  * @test <a href='../../test/place_occupying.html'>test changeCol/changeRow</a>
  */
-W.Creature.prototype.action = function(act){var self = this;
-  if(act) this.act = act;
-  // handle actions not require any animation change
-  if(this.act == 'hide' || this.act == 'still') return;
-  if(this.turnTo(this.act)){
-    checkOutNextAct();
-  }
-  var skill = this.skills[this.act];
-  // change the animation sprite only if it's needed
-  if(skill.img != this.img.src)
-    this.img.src = skill.img;
-
-
-
+//W.Creature.prototype.action = function(act){var self = this;
+W.Creature.prototype.action = function(){var self = this;
   // manage sprite
-  skill.animate();
-
+  this.skills[this.act].animate();
   // move creature
   var bodyPos = 0;
   if(this.dir == 'north' || this.dir == 'south'){
     bodyPos = parseInt(this.body.style.top);
   }else bodyPos = parseInt(this.body.style.left);
-
+  // handle dir
   switch(this.dir){
     case 'north':
       bodyPos -= this.speed;
       if(bodyPos >  -this.speed){
         changeRow(bodyPos);
-      }else this.wall();
+      }else this.algo(true); // hit the edge
       break;
     case 'south':
       bodyPos += this.speed;
       if(bodyPos < this.maxTop + this.speed){
         changeRow(bodyPos);
-      }else this.wall();
+      }else this.algo(true);
       break;
     case 'east':
       bodyPos += this.speed;
       if(bodyPos < this.maxLeft + this.speed){
         changeCol(bodyPos);
-      }else this.wall();
+      }else this.algo(true);
       break;
     case 'west':
       bodyPos -= this.speed;
       if(bodyPos > -this.speed){
         changeCol(bodyPos);
-      }else this.wall();
+      }else this.algo(true);
       break;
   };
 
-  // TODO handle multi-unit creatures
+  //@TODO handle multi-unit creatures
   function changeCol(left){var value = 0;
     left = (left < 0)?0:left;
     if(self.dir == 'east'){
       value = Math.ceil(left / self.world.unit);
     }else if(self.dir == 'west') value = Math.floor(left / self.world.unit);
-
+    // on column change
     if(value != self.col){
-      //self.moveTo(self.row, value);
       var other = self.world.at(self.row, value);
+      // other creature detected
       if(other){
-        self.other(other);  // other creature detected
+        self.algo(other);
         return;
       }else{
+        // exec creature algorithm
+        self.algo();
         self.world.matrix[self.row][value] = self.id;
         self.world.matrix[self.row][self.col] = -1;
         self.col = value;  // change col prop.
-        checkOutNextAct();
+        //if(!checkOutNextAct()) return;
       }
     }
     self.body.style.left = left +'px';  // move body
   };
-
-  window.status = 'act:' + self.act + ', dir:' + self.dir +', top:'
-    + self.body.style.top +', left:'+ self.body.style.left;
-
 
   function changeRow(top){var value = 0;
     top = (top < 0)?0:top;
     if(self.dir == 'south'){
       value = Math.ceil(top / self.world.unit);
     }else if(self.dir == 'north') value = Math.floor(top / self.world.unit);
-
+    // on row change
     if(value != self.row){
       var other = self.world.at(value, self.col);
       if(other){
-        self.other(other);  // other creature detected
+        self.algo(other);  // other creature detected
         return;
       }else{
+        // exec creature algorithm
+        self.algo();
         self.world.matrix[value][self.col] = self.id;
         self.world.matrix[self.row][self.col] = -1;
         self.row = value;  // change row prop.
         // adjust zIndex
         self.body.style.zIndex = value;
-        checkOutNextAct();
       }
     }
     self.body.style.top = top +'px';  // move body
   };
-
-  function checkOutNextAct(){
-    // manage actionQueue
-    if(self.actQueue.length != 0){ // check any reserved act
-      self.act = self.actQueue.shift(); // check out next action
-    }else self.act = 'still';
-  };
 };
 
 
 /**
- * move onto the given coordinate
+ * relative-dir to absolute-dir 
  *
- * @param {Integer} row row
- * @param {Integer} col colume
- */
-W.Creature.prototype.moveTo = function(row, col){
-  var other = this.world.at(row, col);
-  if(!other){
-    this.world.matrix[row][col] = this.id;
-    this.world.matrix[this.row][this.col] = -1;
-    this.row = row;  // change col prop.
-    this.col = col;  // change col prop.
-
-    // manage actionQueue
-    if(this.actQueue.length != 0)  // check any reserved act
-      this.act = this.actQueue.shift();  // check out next action
-  }else this.other(other);  // other creature detected
-};
-
-
-/**
- * turn to the specified direction
- *
- * @param {String} op operation to execute
+ * @param {String} rDir relative dir e.g. left/right/front/rear/random
  * @return {Boolean} true if the op commands direction change
  * @note handles only following actions:
  * 'rturn,left,right,backward,north,east,south,west'
  */
-W.Creature.prototype.turnTo = function(op){
-  switch(op){
-    case 'rturn':
-      var direction  = ['north', 'east', 'south', 'west'];
-      this.dir = direction[Math.floor(Math.random() * 4)];
-      return true;
-    case 'left':
-      switch(this.dir){
-        case 'north': this.dir = 'west';  break;
-        case 'south': this.dir = 'east';  break;
-        case 'east':  this.dir = 'north'; break;
-        case 'west':  this.dir = 'south'; break;
-      };
-      return true;
-    case 'right':
-      switch(this.dir){
-        case 'north': this.dir = 'east';  break;
-        case 'south': this.dir = 'west';  break;
-        case 'east':  this.dir = 'south'; break;
-        case 'west':  this.dir = 'north'; break;
-      };
-      return true;
-    case 'backward':
-      switch(this.dir){
-        case 'north': this.dir = 'south'; break;
-        case 'south': this.dir = 'north'; break;
-        case 'east':  this.dir = 'west';  break;
-        case 'west':  this.dir = 'east';  break;
-      };
-      return true;
-    case 'north':
-    case 'east':
-    case 'south':
-    case 'west':
-      return true;
-    default:  // operation not commnads any direction change
-      return false;
+W.Creature.prototype.getAbsDir = function(rDir){
+  var absDir = ['north', 'east', 'south', 'west'];
+  var relDir = ['front', 'right', 'rear', 'left'];
+  // bypass it if the argument is absDir
+  if (absDir.indexOf(rDir) != -1)
+    return rDir;
+  // handle random turn
+  if(rDir == 'random')
+     return absDir[Math.floor(Math.random() * 4)];
+  // manage circular array
+  numOfTurns = absDir.indexOf(this.dir);
+  for (var i = 0; i < numOfTurns; ++i) {
+    var first = absDir.shift();
+    absDir.push(first);
+  }
+  return absDir[relDir.indexOf(rDir)];
+};  
+
+
+/**
+ * do A to B
+ * 
+ * @param {Skill} A a skill
+ * @param {Object} B argument for the action, e.g. direction, Creature...
+ */
+W.Creature.prototype.doAtoB = function(A, B){
+  // do skill-specific action
+  A.to(B);
+  this.act = A.name;
+  // change sprite image only if its needed
+  if(this.img.src != A.img)
+    this.img.src = A.img;
+};
+
+
+/**
+ * is A on B?
+ * 
+ * @param {Creature} A a creature (object)
+ * @param {String} B direction ('left/right/front/rear/random, and north/south/west/east')
+ * or coordinate ('0:1')
+ */
+W.Creature.prototype.isAonB = function(A, B){
+  // handle direct coordination
+  if(B.split(':').length != 0){
+    var coor = B.split(':');
+    return (A == this.world[coor[0]][coor[1]]);
+  }
+  // convert relative dir.('front',..) to absolute dir.('north',..)
+  while(true){
+    switch(B){
+      case 'north': return (A == this.world[this.col][--this.row]);
+      case 'east': return (A == this.world[++this.col][this.row]);
+      case 'south': return (A == this.world[this.col][++this.row]);
+      case 'west': return (A == this.world[--this.col][this.row]);
+      case 'front':
+      case 'right':
+      case 'rear':
+      case 'left': B = this.getAbsDir(B);
+    }
   };
-};
-
-
-/**
- * meet other creature
- *
- * @param {Creature} other the creature this creature encountered
- */
-W.Creature.prototype.contact = function(other){
-  this.reserve(this.ifWall);
-};
-
-
-/**
- * meet other creature - 2
- *
- * @param {Creature} other the creature this creature encountered
- * @note current implementation: treat as wall
- */
-W.Creature.prototype.other = function(other){
-  this.reserve(this.ifWall);
-};
-
-
-/**
- * face the wall
- */
-W.Creature.prototype.wall = function(){
-  this.reserve(this.ifWall);
-};
-
-
-/**
- * do something (op)
- *
- * @param {String} op the name of operation
- */
-W.Creature.prototype.does = function(op){
-  this.act = op;
-};
-
-
-/**
- * play series of actions
- *
- * @param {String} scenario comma-splited series of actions
- * @test <a href='../../test/playScenario.html'>play reserved actions</a>
- */
-W.Creature.prototype.play = function(scenario){
-  scenario += '';
-  this.actQueue = scenario.split(',');
-};
-
-
-/**
- * researve series of actions
- *
- * @param {String} scenario comma-splited series of actions
- * @note merging_two_arrays.html
- */
-W.Creature.prototype.reserve = function(scenario){
-  // stringify the arg
-  scenario += '';
-  this.actQueue = this.actQueue.concat(scenario.split(','));
 };

@@ -17,7 +17,7 @@
  * - .control - refer to detect whether the creature is controllable
  *
  * @author Sundew H. Shin
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 /**
@@ -130,7 +130,7 @@ W.World.prototype.erase = function(id){
 W.World.prototype.tick = function(){
   // @TODO: self.ready = false;
   for(var i = 0; i < this.creatures.length; ++i)
-    if(this.creatures[i] != -1)
+    //if(this.creatures[i] != -1)
       this.creatures[i].action();
 };
 

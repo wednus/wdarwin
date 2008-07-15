@@ -37,6 +37,22 @@ chocobo.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/c
   south: '64:0,64:24,64:48,64:24',
   west:  '96:0,96:24,96:48,96:24'
 }));
+chocobo.add(new W.Skill({name: 'turn', img: 'module/darwin/test/image/uiv2.com/chocobo.png',
+  north: '0:0',
+  east:  '32:0',
+  south: '64:0',
+  west:  '96:0',
+  to: function(dir){
+    this.creature.dir = this.creature.getAbsDir(dir);
+  }
+}));
+
+// define the creature algorithm
+chocobo.algo = function(creature){
+  if(!creature){
+    this.doAtoB(this.skills['walk']);
+  }else this.doAtoB(this.skills['turn'], 'left');
+};
 
 // add to world
 world.add(chocobo);
