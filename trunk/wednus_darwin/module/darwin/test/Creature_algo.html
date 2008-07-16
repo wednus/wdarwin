@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+oracle.showClock(true);
+// define a world
+var world = new W.World({
+  cols: 4,
+  rows: 4,
+  delay: 6
+});
+world.showGrid(true);
+oracle.add(world);
+
+// define a creature
+var boy = new W.Creature({
+  uwidth: 2,
+  uheight: 2,
+  speed: 4
+});
+world.add(boy);
+
+// add skills
+var turn = new W.Skill({name: 'turn', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0',
+  east:  '48:0',
+  south: '96:0',
+  west:  '144:0',
+  to: function(dir){
+    this.creature.dir = this.creature.getAbsDir(dir);
+  }
+});
+boy.add(turn);
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+});
+boy.add(walk);
+
+// define the creature algorithm
+boy.algo = function(creature){
+  if(creature)
+   this.doAtoB(turn, 'left');
+  this.doAtoB(walk);
+};
+</script>
+</head>
+<body style='background:black'>
+</body></html>
