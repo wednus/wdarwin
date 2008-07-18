@@ -20,9 +20,6 @@ W.Creature = function(args){var self = this;
   // position coordinate on a world
   this.col = 0;
   this.row = 0;
-  this.act = 'hide';
-  this.actLast = '';
-  this.dir = 'south';
   // u(nit) size; 1 unit = 1 * world.unit
   this.uwidth = 1;
   this.uheight = 1;
@@ -33,10 +30,10 @@ W.Creature = function(args){var self = this;
   this.maxLeft = 0;
   // sprite animation speed - the smaller, the smoother animation (more CPU time)
   this.speed = 6;
-  // internal reference only (need to be private)
-  this.actQueue = [];
   this.skills = [];
   this.add(new W.Skill());
+  this.act = 'hide';
+  this.dir = 'south';
   // creature-algorithm
   this.algo = function(){};
   // visual components
@@ -98,7 +95,7 @@ W.Creature.prototype.clone = function(){
   for(var i in this){
     // exclude the HTMLElement members for preventing obj cross referencing
     if(i != 'body' && i != 'img')
-      eval('clone.'+ i +' = this["'+ i +'"];');
+      eval('clone.'+ i +' = this["'+ i +'"]');
   }
   return clone;
 };
@@ -237,9 +234,6 @@ W.Creature.prototype.doAtoB = function(A, B){
   // do skill-specific action
   A.to(B);
   this.act = A.name;
-  // change sprite image only if its needed
-  if(this.img.src != A.img)
-    this.img.src = A.img;
 };
 
 

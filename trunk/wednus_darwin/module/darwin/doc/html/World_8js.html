@@ -38,7 +38,7 @@ creature object requires one properties:<ul>
 <li>.control - refer to detect whether the creature is controllable</li></ul>
 <p>
 <dl class="author" compact><dt><b>Author:</b></dt><dd>Sundew H. Shin </dd></dl>
-<dl class="version" compact><dt><b>Version:</b></dt><dd>0.1.1 </dd></dl>
+<dl class="version" compact><dt><b>Version:</b></dt><dd>0.2.0 </dd></dl>
 
 <p>Definition in file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -100,8 +100,8 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
     <tr><td valign="top"></td><td valign="top"><em>{Object}</em>&nbsp;</td><td>args extend/override constructor w/ this passed args object </td></tr>
   </table>
 </dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000025">Test:</a></b></dt><dd><a href="../../test/World.html">default construction</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000025">Test:</a></b></dt><dd><a href="../../test/World_4by4.html">creature a 4*4 world</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000026">Test:</a></b></dt><dd><a href="../../test/World.html">default construction</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000026">Test:</a></b></dt><dd><a href="../../test/World_4by4.html">creature a 4*4 world</a> </dd></dl>
 </li></ul>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00033">33</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
@@ -121,10 +121,18 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
 
 <p>
 <b>Initial value:</b><div class="fragment"><pre class="fragment"> function(row, col){
-  <span class="keywordflow">if</span>(row &lt; this.rows &amp;&amp; col &lt; this.cols)
-    <span class="keywordflow">return</span> this.matrix[row][col];
-  <span class="keywordflow">return</span> this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a>;
+
+  var <span class="keywordtype">id</span> = this.matrix[row][col];
   
+  <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == -1) <span class="keywordflow">return</span> <span class="keyword">false</span>;  
+  <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == -2) <span class="keywordflow">return</span> this.wall;  
+  var creature;
+  <span class="keywordflow">for</span>(var i = 0; i &lt; this.creatures.length; ++i){
+    creature = this.creatures[i];
+    <span class="keywordflow">if</span>(creature.row == row &amp;&amp; creature.col == col)
+    <span class="keywordflow">return</span> creature;
+  }
+  <span class="keywordflow">return</span> <span class="keyword">false</span>;
 }
 </pre></div>return creature on the given coordinate 
 <p>
@@ -134,7 +142,7 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
     <tr><td valign="top"></td><td valign="top"><em>{Number}</em>&nbsp;</td><td>col given col </td></tr>
   </table>
 </dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>{Creature} creature if there is a creature on the given coordinate; otherwise, return <a class="el" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">W.World.wall</a> (creature ID: -2). </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>{Creature} creature if there is a creature on the given coordinate; otherwise, return W.World.wall (creature ID: -2). </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00094">94</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -184,12 +192,12 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
 <b>Initial value:</b><div class="fragment"><pre class="fragment"> function(){
   
   <span class="keywordflow">for</span>(var i = 0; i &lt; this.creatures.length; ++i)
-    <span class="keywordflow">if</span>(this.creatures[i] != -1)
-      this.creatures[i].action();
+    
+      this.creatures[i].<a class="code" href="Creature_8js.html#d723e2cfc7e50399f6998477e2953859" title="perform current action">action</a>();
 }
 </pre></div>Oracle's requirement: .<a class="el" href="World_8js.html#f9c3e7ec357df13783459962704e0ebb" title="Oracle&#39;s requirement: .tick() method taking the generated periodic events.">tick()</a> method taking the generated periodic events. 
 <p>
-<dl compact><dt><b><a class="el" href="test.html#_test000027">Test:</a></b></dt><dd><a href="../../test/World_with_Oracle.html">World with Oracle</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000028">Test:</a></b></dt><dd><a href="../../test/World_with_Oracle.html">World with Oracle</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00130">130</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -239,7 +247,7 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
   </table>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>{Creature} this creature with updated properties (mostly dimension info) </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000028">Test:</a></b></dt><dd><a href="../../test/World_get_into_Oracle.html">add a World into an Oracle</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000029">Test:</a></b></dt><dd><a href="../../test/World_get_into_Oracle.html">add a World into an Oracle</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00147">147</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -259,12 +267,12 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
 <p>
 <b>Initial value:</b><div class="fragment"><pre class="fragment"> function(bitmask){
   
-  <span class="keywordflow">if</span>(typeof this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a> == <span class="stringliteral">'undefined'</span>)
-    this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a> = {<span class="keywordtype">id</span>: -2};
+  <span class="keywordflow">if</span>(typeof this.wall == <span class="stringliteral">'undefined'</span>)
+    this.wall = {<span class="keywordtype">id</span>: -2};
   var data = bitmask.split(<span class="charliteral">':'</span>);
   data[1] = data[1].split(<span class="charliteral">','</span>);
   <span class="keywordflow">for</span>(var i = 0; i &lt; data[1].length; ++i)
-    this.matrix[data[0]][data[1][i]] = this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a>.id;
+    this.matrix[data[0]][data[1][i]] = this.wall.id;
 }
 </pre></div>set the wall 
 <p>
@@ -273,7 +281,7 @@ This class implements a prototype of HTMLElement object containers. (world)<ul>
     <tr><td valign="top"></td><td valign="top"><em>{String}</em>&nbsp;</td><td>bitmask string with wall data </td></tr>
   </table>
 </dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000029">Test:</a></b></dt><dd><a href="../../test/World_with_wall.html">World with wall</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000030">Test:</a></b></dt><dd><a href="../../test/World_with_wall.html">World with wall</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00177">177</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -343,7 +351,7 @@ color or the URL for the image source </td></tr>
 }
 </pre></div>expand the .core to fit the .body area 
 <p>
-<dl compact><dt><b><a class="el" href="test.html#_test000030">Test:</a></b></dt><dd><a href="../../test/World_full.html">stretched to fit to the world.body</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000031">Test:</a></b></dt><dd><a href="../../test/World_full.html">stretched to fit to the world.body</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00202">202</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -374,7 +382,7 @@ color or the URL for the image source </td></tr>
 otherwise, false </td></tr>
   </table>
 </dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000031">Test:</a></b></dt><dd><a href="../../test/World_showGrid.html">reveal grid on/off</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000032">Test:</a></b></dt><dd><a href="../../test/World_showGrid.html">reveal grid on/off</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00232">232</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 
@@ -409,8 +417,8 @@ otherwise, false </td></tr>
 }
 </pre></div>fit the .core to the background image 
 <p>
-<dl compact><dt><b><a class="el" href="test.html#_test000032">Test:</a></b></dt><dd><a href="../../test/World_with_background.html">World with background image</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000032">Test:</a></b></dt><dd><a href="../../test/World_with_background_32unit.html">World with background image (32px)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000033">Test:</a></b></dt><dd><a href="../../test/World_with_background.html">World with background image</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000033">Test:</a></b></dt><dd><a href="../../test/World_with_background_32unit.html">World with background image (32px)</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="World_8js-source.html#l00244">244</a> of file <a class="el" href="World_8js-source.html">World.js</a>.</p>
 

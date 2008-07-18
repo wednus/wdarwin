@@ -67,7 +67,9 @@ W.Skill.prototype.animate = function(){
   }else ++this.frame;
   
   //window.status = 'dir:'+ this.creature.dir +', this.frame:'+ this.frame;
-  
+  // change sprite image only if its needed
+  if(this.creature.img.src != this.img)
+    this.creature.img.src = this.img;
   // flip frame
   this.creature.img.style.top = -this[this.creature.dir][this.frame].top +'px';
   this.creature.img.style.left = -this[this.creature.dir][this.frame].left +'px';

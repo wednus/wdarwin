@@ -18,10 +18,7 @@ world.showGrid(true);
 oracle.add(world);
 oracle.showClock(true);
 
-var creature = new W.Creature({
-  act: 'walk',
-  dir: 'south'
-});
+var creature = new W.Creature();
 // add skills
 creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/reymond/boy.gif',
   north: '0:0',
