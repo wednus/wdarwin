@@ -10,12 +10,15 @@ W.load('module/darwin', 'Skill,Creature');
 <script type='text/javascript'>
 var creature = new W.Creature();
 // add skills
-creature.add(new W.Skill({
-  name: 'stand', img: 'module/darwin/test/image/creatures/bongu.png'
-}));
+var stand = new W.Skill({
+  name: 'stand', img: 'module/darwin/test/image/creatures/bongu.png',
+  south: '0:0'
+});
+creature.add(stand);
 
 document.body.appendChild(creature.body);
 creature.resize(199);
+creature.skills['stand'].animate();
 </script>
 </head>
 <body>

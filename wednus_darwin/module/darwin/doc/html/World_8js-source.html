@@ -78,22 +78,22 @@
 <a name="l00084"></a>00084 
 <a name="l00085"></a>00085 
 <a name="l00094"></a><a class="code" href="World_8js.html#b4e2d0db6ca8692e956bdf07827cd735">00094</a> W.World.prototype.at = function(row, col){
-<a name="l00095"></a>00095   <span class="keywordflow">if</span>(row &lt; this.rows &amp;&amp; col &lt; this.cols)
-<a name="l00096"></a>00096     <span class="keywordflow">return</span> this.matrix[row][col];
-<a name="l00097"></a>00097   <span class="keywordflow">return</span> this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a>;
-<a name="l00098"></a>00098   <span class="comment">/*</span>
-<a name="l00099"></a>00099 <span class="comment">  var id = this.matrix[row][col];</span>
-<a name="l00100"></a>00100 <span class="comment">  //window.status = 'row:'+ row +', col:'+ col;</span>
-<a name="l00101"></a>00101 <span class="comment">  if(id == -1) return false;  // empty (default)</span>
-<a name="l00102"></a>00102 <span class="comment">  if(id == -2) return this.wall;  // wall</span>
-<a name="l00103"></a>00103 <span class="comment">  var creature;</span>
-<a name="l00104"></a>00104 <span class="comment">  for(var i = 0; i &lt; this.creatures.length; ++i){</span>
-<a name="l00105"></a>00105 <span class="comment">    creature = this.creatures[i];</span>
-<a name="l00106"></a>00106 <span class="comment">    if(creature.row == row &amp;&amp; creature.col == col)</span>
-<a name="l00107"></a>00107 <span class="comment">    return creature;</span>
-<a name="l00108"></a>00108 <span class="comment">  }</span>
-<a name="l00109"></a>00109 <span class="comment">  return false;</span>
-<a name="l00110"></a>00110 <span class="comment">  */</span>
+<a name="l00095"></a>00095 <span class="comment">/*</span>
+<a name="l00096"></a>00096 <span class="comment">  if(row &lt; this.rows &amp;&amp; col &lt; this.cols)</span>
+<a name="l00097"></a>00097 <span class="comment">    return this.matrix[row][col];</span>
+<a name="l00098"></a>00098 <span class="comment">  return false;</span>
+<a name="l00099"></a>00099 <span class="comment">*/</span>
+<a name="l00100"></a>00100   var <span class="keywordtype">id</span> = this.matrix[row][col];
+<a name="l00101"></a>00101   <span class="comment">//window.status = 'row:'+ row +', col:'+ col;</span>
+<a name="l00102"></a>00102   <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == -1) <span class="keywordflow">return</span> <span class="keyword">false</span>;  <span class="comment">// empty (default)</span>
+<a name="l00103"></a>00103   <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == -2) <span class="keywordflow">return</span> this.wall;  <span class="comment">// wall</span>
+<a name="l00104"></a>00104   var creature;
+<a name="l00105"></a>00105   <span class="keywordflow">for</span>(var i = 0; i &lt; this.creatures.length; ++i){
+<a name="l00106"></a>00106     creature = this.creatures[i];
+<a name="l00107"></a>00107     <span class="keywordflow">if</span>(creature.row == row &amp;&amp; creature.col == col)
+<a name="l00108"></a>00108     <span class="keywordflow">return</span> creature;
+<a name="l00109"></a>00109   }
+<a name="l00110"></a>00110   <span class="keywordflow">return</span> <span class="keyword">false</span>;
 <a name="l00111"></a>00111 };
 <a name="l00112"></a>00112 
 <a name="l00113"></a>00113 
@@ -107,8 +107,8 @@
 <a name="l00130"></a><a class="code" href="World_8js.html#f9c3e7ec357df13783459962704e0ebb">00130</a> W.World.prototype.tick = function(){
 <a name="l00131"></a>00131   <span class="comment">// @TODO: self.ready = false;</span>
 <a name="l00132"></a>00132   <span class="keywordflow">for</span>(var i = 0; i &lt; this.creatures.length; ++i)
-<a name="l00133"></a>00133     <span class="keywordflow">if</span>(this.creatures[i] != -1)
-<a name="l00134"></a>00134       this.creatures[i].action();
+<a name="l00133"></a>00133     <span class="comment">//if(this.creatures[i] != -1)</span>
+<a name="l00134"></a>00134       this.creatures[i].<a class="code" href="Creature_8js.html#d723e2cfc7e50399f6998477e2953859" title="perform current action">action</a>();
 <a name="l00135"></a>00135 };
 <a name="l00136"></a>00136 
 <a name="l00137"></a>00137 
@@ -138,12 +138,12 @@
 <a name="l00170"></a>00170 
 <a name="l00177"></a><a class="code" href="World_8js.html#44b11db109f0eea6342f7f6a3e146951">00177</a> W.World.prototype.set = function(bitmask){
 <a name="l00178"></a>00178   <span class="comment">// define wall id</span>
-<a name="l00179"></a>00179   <span class="keywordflow">if</span>(typeof this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a> == <span class="stringliteral">'undefined'</span>)
-<a name="l00180"></a>00180     this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a> = {<span class="keywordtype">id</span>: -2};
+<a name="l00179"></a>00179   <span class="keywordflow">if</span>(typeof this.wall == <span class="stringliteral">'undefined'</span>)
+<a name="l00180"></a>00180     this.wall = {<span class="keywordtype">id</span>: -2};
 <a name="l00181"></a>00181   var data = bitmask.split(<span class="charliteral">':'</span>);
 <a name="l00182"></a>00182   data[1] = data[1].split(<span class="charliteral">','</span>);
 <a name="l00183"></a>00183   <span class="keywordflow">for</span>(var i = 0; i &lt; data[1].length; ++i)
-<a name="l00184"></a>00184     this.matrix[data[0]][data[1][i]] = this.<a class="code" href="Creature_8js.html#a78e1600fcfc6501bd8966011dd8cafb" title="face the wall">wall</a>.id;
+<a name="l00184"></a>00184     this.matrix[data[0]][data[1][i]] = this.wall.id;
 <a name="l00185"></a>00185 };
 <a name="l00186"></a>00186 
 <a name="l00187"></a>00187 

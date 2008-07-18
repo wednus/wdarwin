@@ -139,8 +139,8 @@ W.World.prototype.tick = function(){
  * add creature into the world
  *
  * @param {Creature} creature a creature to be added
- * @param {Number} row the row to be inserted on
- * @param {Number} col the col to be inserted on
+ * @param {Integer} row the row to be inserted on
+ * @param {Integer} col the col to be inserted on
  * @return {Creature} this creature with updated properties (mostly dimension info)
  * @test <a href='../../test/World_get_into_Oracle.html'>add a World into an Oracle</a>
  */

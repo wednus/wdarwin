@@ -29,7 +29,7 @@
 Wednus Skill class. 
 <p>
 This file contains the class definition of the <a class="el" href="Skill_8js.html#028ba7c9de3f1f29ac27c7ebfcc9999e" title="Skill class.">W.Skill</a>. <dl class="author" compact><dt><b>Author:</b></dt><dd>Sundew H. Shin </dd></dl>
-<dl class="version" compact><dt><b>Version:</b></dt><dd>0.1.1 </dd></dl>
+<dl class="version" compact><dt><b>Version:</b></dt><dd>0.2.0 </dd></dl>
 
 <p>Definition in file <a class="el" href="Skill_8js-source.html">Skill.js</a>.</p>
 
@@ -89,29 +89,21 @@ This abstract class implements a prototype defining an animation action for Crea
     this.frame = 0;
   }<span class="keywordflow">else</span> ++this.frame;
   
+  
+  
+  
   this.creature.img.style.top = -<span class="keyword">this</span>[this.creature.dir][this.frame].top +<span class="stringliteral">'px'</span>;
   this.creature.img.style.left = -<span class="keyword">this</span>[this.creature.dir][this.frame].left +<span class="stringliteral">'px'</span>;
-
-  var status = <span class="stringliteral">'act:'</span>+ this.creature.act;
-  status += <span class="stringliteral">', dir:'</span>+ this.creature.dir;
-  status += <span class="stringliteral">', speed:'</span>+ this.creature.speed;
-  status += <span class="stringliteral">', top:'</span>+ this.creature.img.style.top;
-  status += <span class="stringliteral">', left:'</span>+ this.creature.img.style.left;
-  status += <span class="stringliteral">', body.top:'</span>+ this.creature.body.style.top;
-  status += <span class="stringliteral">', body.left:'</span>+ this.creature.body.style.left;
-  status += <span class="stringliteral">', body.width:'</span>+ this.creature.body.style.width;
-  status += <span class="stringliteral">', body.height:'</span>+ this.creature.body.style.height;
-  window.status = status;
 }
 </pre></div>animate skill 
 <p>
-<dl compact><dt><b><a class="el" href="test.html#_test000020">Test:</a></b></dt><dd><a href="../../test/animation_reymond.html">animate creature (1-frame: animation gif)</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000020">Test:</a></b></dt><dd><a href="../../test/animation.html">animate creature (3-frame)</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000020">Test:</a></b></dt><dd><a href="../../test/animation_villager.html">animate creature (4-frame)</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000020">Test:</a></b></dt><dd><a href="../../test/animation_rock_cn_sprites.html">animate creature (6-frame)</a> </dd></dl>
-<dl compact><dt><b><a class="el" href="test.html#_test000020">Test:</a></b></dt><dd><a href="../../test/animation_lemming.html">animate creature (8-frame)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000021">Test:</a></b></dt><dd><a href="../../test/animation_reymond.html">animate creature (1-frame: animation gif)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000021">Test:</a></b></dt><dd><a href="../../test/animation.html">animate creature (3-frame)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000021">Test:</a></b></dt><dd><a href="../../test/animation_villager.html">animate creature (4-frame)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000021">Test:</a></b></dt><dd><a href="../../test/animation_rock_cn_sprites.html">animate creature (6-frame)</a> </dd></dl>
+<dl compact><dt><b><a class="el" href="test.html#_test000021">Test:</a></b></dt><dd><a href="../../test/animation_lemming.html">animate creature (8-frame)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="Skill_8js-source.html#l00060">60</a> of file <a class="el" href="Skill_8js-source.html">Skill.js</a>.</p>
+<p>Definition at line <a class="el" href="Skill_8js-source.html#l00063">63</a> of file <a class="el" href="Skill_8js-source.html">Skill.js</a>.</p>
 
 </div>
 </div><p>
