@@ -51,7 +51,7 @@ function character(name){
   creature.algo = function(creature){
     if(!creature){
       this.doAtoB(this.skills['walk']);
-    }else this.doAtoB(this.skills['turn'], 'left');
+    }else this.doAtoB(this.skills['turn'], 'random');
   };
   
   return creature;
