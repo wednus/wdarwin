@@ -40,7 +40,7 @@ W.Creature = function(args){var self = this;
   this.img = document.createElement('img');
   this.img.title = this.id + ' : '+ this.name;
   this.img = W.style('img', 'position:absolute;left:-1000px;');
-  this.body = W.style('div', 'position:absolute;top:0px;left:0px;overflow:hidden;');
+  this.body = W.style('div', 'position:absolute;top:0px;left:0px;overflow:hidden;background:navy;');
   this.body.appendChild(this.img);
 
   /**
