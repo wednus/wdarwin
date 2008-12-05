@@ -21,7 +21,6 @@ oracle.add(world);
 
 // define creatures
 var human = new W.Creature();
-human.act = 'walk';
 human.uwidth = 2;
 human.uheight = 2;
 // add skills
@@ -36,6 +35,12 @@ world.add(human);
 
 world.set('0:1');
 world.set('1:1');
+
+
+// define the creature algorithm
+human.algo = function(event, arg){
+  this.does(this.skills['walk'], 'random');
+};
 
 </script>
 </head>

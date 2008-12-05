@@ -41,8 +41,16 @@ human.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
 }));
 
 // define the creature algorithm
-human.algo = function(creature){
-  this.doAtoB(this.skills['walk']);
+// define the creature algorithm
+human.algo = function(event, arg){
+  switch(event){
+    case 'on_wall':
+      this.does(this.skills['walk'], 'random');
+      break;
+    case 'on_creature':
+      this.does(this.skills['walk'], 'random');
+      break;
+  }
 };
 
 
@@ -62,10 +70,7 @@ turtlex.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/wal
 }));
 
 // define the creature algorithm
-turtlex.algo = function(creature){
-  this.doAtoB(this.skills['walk']);
-};
-
+turtlex.algo = human.algo;
 
 world.add(turtlex);
 world.add(human);

@@ -23,7 +23,6 @@ oracle.add(world);
 
 // define creatures
 var creature = new W.Creature({
-  act: 'walk',
   uwidth: 2,
   uheight: 2
 });
@@ -34,6 +33,11 @@ creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif'
   south: '96:0,96:48,96:96',
   west:  '144:0,144:48,144:96'
 }));
+
+// define the creature algorithm
+creature.algo = function(creature){
+  this.does(this.skills['walk'], 'random');
+};
 
 world.add(creature.clone(), 0, 0);
 world.add(creature.clone(), 0, 1);

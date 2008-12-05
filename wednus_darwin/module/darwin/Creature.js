@@ -96,10 +96,14 @@ W.Creature.prototype.add = function(skill){
  * @test <a href='../../test/clones_on_iphone.html'>clones on iPhone-sized world</a>
  */
 W.Creature.prototype.clone = function(){
-  var clone = new W.Creature();
+	var clone = new W.Creature({uwidth:this.uwidth,uheight:this.uheight});
+  // copy skills
+  for(var i in this.skills)
+		clone.add(new W.Skill(this.skills[i]));
+  // copy other elements (e.g. Creature.algo)
   for(var i in this){
-    // exclude the HTMLElement members for preventing obj cross referencing
-    if(i != 'body' && i != 'img')
+    // exclude the HTMLElements/Objects for preventing obj cross referencing
+    if(i != 'body' && i != 'img' && i != 'skills')
       eval('clone.'+ i +' = this["'+ i +'"]');
   }
   return clone;
