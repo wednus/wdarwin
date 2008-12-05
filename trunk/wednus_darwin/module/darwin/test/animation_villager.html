@@ -35,7 +35,7 @@ villager.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/
 
 // define the creature algorithm
 villager.algo = function(creature){
-  this.doAtoB(this.skills['walk']);
+  this.does(this.skills['walk']);
 };
 
 // add to world

@@ -36,15 +36,17 @@ W.Skill = function(args){var self = this;
   for(var i in args)
     eval('this.'+ i +' = args["'+ i +'"];');
 
-  this.img = W.path + this.img;
   this.east = splitter(this.east);
   this.west = splitter(this.west);
   this.north = splitter(this.north);
   this.south = splitter(this.south);
 
   // split by comma
-  function splitter(str){
-    var tmp = str.split(',');
+  function splitter(arg){
+		if(typeof arg.split == 'undefined')
+		  return arg;
+
+    var tmp = arg.split(',');
     var arr = [];
     for(var i = 0; i < tmp.length; ++i){
       tmp[i] = tmp[i].split(':');
@@ -73,8 +75,8 @@ W.Skill.prototype.animate = function(){
   
   //window.status = 'dir:'+ this.creature.dir +', this.frame:'+ this.frame;
   // change sprite image only if its needed
-  if(this.creature.img.src != this.img)
-    this.creature.img.src = this.img;
+  if(this.creature.img.src != W.path + this.img)
+    this.creature.img.src = W.path + this.img;
   // flip frame
   this.creature.img.style.top = -this[this.creature.dir][this.frame].top +'px';
   this.creature.img.style.left = -this[this.creature.dir][this.frame].left +'px';

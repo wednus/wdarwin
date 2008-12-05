@@ -36,21 +36,14 @@ gorgon.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/gorgon/walk
   south: '192:0,192:96,192:192',
   west:  '288:0,288:96,288:192'
 }));
-gorgon.add(new W.Skill({name: 'turn', img: 'module/darwin/test/image/gorgon/walk.gif',
-  north: '0:0',
-  east:  '96:0',
-  south: '192:0',
-  west:  '288:0',
-  to: function(dir){
-    this.creature.dir = this.creature.getAbsDir(dir);
-  }  
-}));
 
 // define the creature algorithm
-gorgon.algo = function(creature){
-  if(!creature){
-    this.doAtoB(this.skills['walk']);
-  }else this.doAtoB(this.skills['turn'], 'left');
+gorgon.algo = function(event, arg){
+  switch(event){
+    case 'on_wall':
+      this.does(this.skills['walk'], 'left');
+      break;
+  };
 };
 
 // add creatures
