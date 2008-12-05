@@ -24,7 +24,7 @@ oracle.add(world);
 
 // define creatures
 var human = new W.Creature({
-  act: 'walk',
+	dir: 'north',
   speed: 6,
   col: 11,
   row: 18,
@@ -47,7 +47,6 @@ human.algo = function(creature){
 
 
 var turtlex = new W.Creature({
-  act: 'walk',
   dir: 'south',
   speed: 3,
   uwidth: 2,
@@ -66,6 +65,11 @@ turtlex.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/wal
 turtlex.algo = function(creature){
   this.doAtoB(this.skills['walk']);
 };
+
+
+world.add(turtlex);
+world.add(human);
+
 
 for(var i = 0; i < 5; ++i){
   world.add(turtlex.clone());

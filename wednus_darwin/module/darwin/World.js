@@ -17,7 +17,7 @@
  * - .control - refer to detect whether the creature is controllable
  *
  * @author Sundew H. Shin
- * @version 0.2.0
+ * @version 0.2.1
  */
 
 /**
@@ -48,9 +48,12 @@ W.World = function(args){var self = this;
   // status properties
   //this.ready = true;  // ready status
   this.stop = false;  // stop world
+  this.msg_delay = 0;
+  this.preset_msg_delay = 100;
   // containers
   this.creatures = [];
   this.matrix = [];  // creature matrix
+  this.messages = []; // message queue
 
   // extend/override constructor w/ passed args object
   for(var i in args)
@@ -124,14 +127,35 @@ W.World.prototype.erase = function(id){
 
 
 /**
+ * output to an message board
+ */
+W.World.prototype.writeMessage = function(msg){
+	window.status = msg;
+};
+
+
+/**
  * Oracle's requirement: .tick() method taking the generated periodic events
  * @test <a href='../../test/World_with_Oracle.html'>World with Oracle</a>
  */
 W.World.prototype.tick = function(){
   // @TODO: self.ready = false;
-  for(var i = 0; i < this.creatures.length; ++i)
-    //if(this.creatures[i] != -1)
-      this.creatures[i].action();
+  for(var i = 0; i < this.creatures.length; ++i){
+  	//if(this.creatures[i] != -1)
+		this.creatures[i].action();
+	}
+	// ensures message lasts during pre-defined duration
+	if(this.msg_delay != 0){
+		--this.msg_delay;
+		return;
+	}
+	// bring up the next message if there's any.
+	if(this.messages.length != 0){
+		this.writeMessage(this.messages[0]);
+		this.msg_delay = this.preset_msg_delay;
+		this.messages.shift();
+	};
+	
 };
 
 
@@ -164,6 +188,8 @@ W.World.prototype.add = function(creature, row, col){
   // register creature
   this.core.appendChild(creature.body);
   this.matrix[creature.row][creature.col] = creature.id;
+	// attach event handler(s)
+	creature.algo('on_world_entry')
   return creature;
 };
 

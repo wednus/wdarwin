@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type='text/javascript'>
+/**
+ * Creature events
+ */
+
+// define an oracle
+var oracle = new W.Oracle();
+oracle.showClock(true);
+// define a world
+var world = new W.World({
+  cols: 8,
+  rows: 8,
+  delay: 6
+});
+world.showGrid(true);
+oracle.add(world);
+
+// define a custom message board
+var mboard = W.style('div','top:0px;left:'+ (parseInt(world.body.style.width)
+  + 10) +'px;width:260px;height:'+ parseInt(world.body.style.height) +'px;background:'
+	+'black;position:absolute;fontFamily:Tahoma;fontSize:10px;color:white;'
+	+'overflow:hidden;');
+document.body.appendChild(mboard);
+
+// override the default member func.
+world.writeMessage = function(msg){
+	mboard.innerHTML = msg + '<br>'+ mboard.innerHTML;
+};
+world.preset_msg_delay = 0;
+
+// define a creature
+var boy = new W.Creature({
+	name: 'Haru',
+  uwidth: 2,
+  uheight: 2,
+  speed: 4,
+	col: 3,
+	row: 0
+});
+world.add(boy);
+
+// add skills
+var turn = new W.Skill({name: 'turn', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0',
+  east:  '48:0',
+  south: '96:0',
+  west:  '144:0'
+});
+boy.add(turn);
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+});
+boy.add(walk);
+boy.act = 'walk'; // default action
+
+var stand = new W.Skill({name: 'stand', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0',
+  east:  '48:0',
+  south: '96:0',
+  west:  '144:0'
+});
+boy.add(stand);
+
+// define the creature algorithm
+boy.algo = function(event, arg){var self = this;
+	switch(event){
+		case 'on_wall':
+      this.does(walk, 'random');
+			break;
+		case 'on_creature':
+		  this.talk('Hi, killen. How are you?')
+      this.does(walk, arg.dir);
+      break;
+	  case 'on_nothing':
+		  if (arg.col == 3 && arg.row == 3)
+				narration();
+      break;
+    case 'on_click':
+      this.talk('You just clicked me!');
+      this.talk('I\'ll take a walk.');
+			this.does(walk);
+      self.resume();
+      break;
+    case 'on_mouseover':
+      this.talk('You moved your mouse over me.');
+      break;
+    case 'on_mouseout':
+      this.talk('You moved your mouse out of me.');
+      break;
+    case 'on_world_entry':
+      this.talk('I\'m in.');
+      break;
+	  default:
+	};
+	
+	function narration(){
+    self.does(stand);
+    self.stop();
+    self.talk('Hello.');
+    self.talk('I\'m Haru. Nice to meet you.');
+    self.talk('Try some mouse trick to me.');
+	};
+};
+
+// define a creature
+var kileen = new W.Creature({
+	name: 'Kileen',
+  uwidth: 2,
+  uheight: 2,
+  speed: 4,
+  col: 2,
+  row: 2
+});
+world.add(kileen);
+var walk2 = new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+});
+kileen.add(walk2);
+kileen.act = 'walk'; // default action
+// define the creature algorithm
+kileen.algo = function(event, other){
+  switch(event){
+    case 'on_wall':
+      this.talk('(On wall, I\'m programmed to turn left.)')
+      this.does(walk, 'left');
+      break;
+    case 'on_creature':
+      this.talk('Hi, Haru. Let\'s walk together.')
+      this.does(walk, other.dir);
+      break;
+    case 'on_nothing':
+      this.does(walk, 'random');
+      break;
+    default:
+  };
+};
+</script>
+</head>
+<body style='background:black'>
+</body></html>

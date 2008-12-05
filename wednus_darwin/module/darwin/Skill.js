@@ -24,9 +24,14 @@ W.Skill = function(args){var self = this;
 
   this.dir = 'south';  // current direction
   this.frame = 0;  // current frame
-  // skill specific behavior definication
-  this.to = function(arg){};
-  
+
+  // place holder for creature which this skill added
+  this.creature = {getAbsDir: new Function()};
+  // do this skiil toward the given direction
+  this.toward = function(dir){
+    self.creature.dir = self.creature.getAbsDir(dir);
+  }
+
   // extend/override constructor w/ passed args object
   for(var i in args)
     eval('this.'+ i +' = args["'+ i +'"];');
