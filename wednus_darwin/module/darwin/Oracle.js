@@ -143,7 +143,7 @@ W.Oracle.prototype.showClock = function(isOn){var self = this;
       if(world.body){
         if(isOn){
           if(!world.clock){
-            world.clock = W.style('div', 'color:lime;fontSize:11px;display:none');
+            world.clock = W.style('div', 'color:lime;fontSize:10px;display:none');
             world.body.appendChild(world.clock);
           }
           world.clock.style.display = 'block';
