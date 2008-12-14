@@ -95,15 +95,17 @@ W.World = function(args){var self = this;
  * otherwise, return W.World.wall (creature ID: -2).
  */
 W.World.prototype.at = function(row, col){
-/*
-  if(row < this.rows && col < this.cols)
-    return this.matrix[row][col];
-  return false;
-*/
+	/*
+	  if(row < this.rows && coll < this.cols)
+	    return this.matrix[row][col];
+	  return false;
+	*/
+	if(row >= this.rows) return this.wall;
+  //window.status = 'world.rows:'+ world.rows +', world.cols:'+ world.cols +',row:'+ row +', col:'+ col;
   var id = this.matrix[row][col];
-  //window.status = 'row:'+ row +', col:'+ col;
   if(id == -1) return false;  // empty (default)
   if(id == -2) return this.wall;  // wall
+  // get creature
   var creature;
   for(var i = 0; i < this.creatures.length; ++i){
     creature = this.creatures[i];
@@ -245,7 +247,7 @@ W.World.prototype.full = function(){var self = this;
   this.buildMatrix(this.rows, this.cols);
 
   //document.body.appendChild(W.style('table', 'width:'+ this.width +';height:'+ this.height));
-  document.body.appendChild(W.style('table', 'width:100px;height:100px'));
+  //document.body.appendChild(W.style('table', 'width:100px;height:100px'));
 };
 
 
@@ -255,10 +257,29 @@ W.World.prototype.full = function(){var self = this;
  * @param {Boolean} isOn true to turn on the grid display on .core<br>otherwise, false
  * @test <a href='../../test/World_showGrid.html'>reveal grid on/off</a>
  */
-W.World.prototype.showGrid = function(isOn){
+W.World.prototype.showGrid = function(isOn){var self = this;
+  if(typeof this.grid == 'undefined'){
+		this.grid = W.style('table');
+		this.grid.cellPadding = this.grid.cellSpacing = 0;		
+    this.core.appendChild(this.grid);
+    W.event(window, 'onload', gridInit);
+  }
   if(isOn){
-    this.core.style.background =  'url('+ W.path +'module/darwin/image/grid_'+ this.unit +'.gif)';
-  }else this.core.style.background = "";
+  	this.grid.style.visibility = 'visible';
+  }else this.grid.style.visibility = 'hidden';
+	
+	function gridInit(){
+		var tr;
+		self.grid.style.width = self.width +'px';
+    self.grid.style.height = self.height +'px';
+		for (var i = 0; i < self.rows; ++i) {
+			tr = W.style('tr');
+			for (var j = 0; j < self.cols; ++j) {
+        tr.appendChild(W.style('td', 'border:solid 1px silver;width:'+ (self.unit - 1) +'px'));
+			}
+      self.grid.appendChild(tr);
+	  }
+	};
 };
 
 
