@@ -32,11 +32,10 @@ W.Creature = function(args){var self = this;
   // sprite animation speed - the smaller, the smoother animation (more CPU time)
   this.speed = 6;
   this.skills = [];
+	this.events = [];
   this.add(new W.Skill());
   this.act = 'hide';
   this.dir = 'south';
-  // creature-algorithm: exec when creature moves to the next cell
-  this.algo = function(){};
   // visual components
   this.img = document.createElement('img');
   this.img.title = this.id + ' : '+ this.name;
@@ -100,6 +99,10 @@ W.Creature.prototype.clone = function(){
   // copy skills
   for(var i in this.skills)
 		clone.add(new W.Skill(this.skills[i]));
+  // copy events
+	clone.events = this.events;
+	  
+  //eval('clone.events["'+ i +'"] = this.events["'+ i +'"]');
   // copy other elements (e.g. Creature.algo)
   for(var i in this){
     // exclude the HTMLElements/Objects for preventing obj cross referencing
@@ -124,6 +127,7 @@ W.Creature.prototype.action = function(){var self = this;
   this.skills[this.act].animate();
   // move creature
   var bodyPos = 0;
+	var newCoor = 0;
   if(this.dir == 'north' || this.dir == 'south'){
     bodyPos = parseInt(this.body.style.top);
   }else bodyPos = parseInt(this.body.style.left);
@@ -131,74 +135,70 @@ W.Creature.prototype.action = function(){var self = this;
   switch(this.dir){
     case 'north':
       bodyPos -= this.speed;
+			newCoor = Math.ceil(bodyPos / this.world.unit);
       if(bodyPos >  -this.speed){
-        changeRow(bodyPos);
+        changeRow(bodyPos, newCoor);
       }else this.algo('on_wall'); // hit the edge
       break;
     case 'south':
       bodyPos += this.speed;
-      if(bodyPos < this.maxTop + this.speed){
-        changeRow(bodyPos);
+      newCoor = Math.ceil(bodyPos / this.world.unit)
+      if(bodyPos < this.maxTop + this.speed && newCoor < this.world.rows){
+        changeRow(bodyPos, newCoor);
       }else this.algo('on_wall'); // hit the edge
       break;
     case 'east':
       bodyPos += this.speed;
-      if(bodyPos < this.maxLeft + this.speed){
-        changeCol(bodyPos);
+      newCoor = Math.ceil(bodyPos / this.world.unit);
+      if(bodyPos < this.maxLeft + this.speed && newCoor < this.world.cols){
+        changeCol(bodyPos, newCoor);
       }else this.algo('on_wall'); // hit the edge
       break;
     case 'west':
       bodyPos -= this.speed;
+			newCoor = Math.floor(bodyPos / this.world.unit);
       if(bodyPos > -this.speed){
-        changeCol(bodyPos);
+        changeCol(bodyPos, newCoor);
       }else this.algo('on_wall'); // hit the edge
       break;
   };
 
   //@TODO handle multi-unit creatures
-  function changeCol(left){var value = 0;
+  function changeCol(left, newCol){var value = 0;
     left = (left < 0)?0:left;
-    if(self.dir == 'east'){
-      value = Math.ceil(left / self.world.unit);
-    }else if(self.dir == 'west') value = Math.floor(left / self.world.unit);
     // on column change
-    if(value != self.col){
+    if(newCol != self.col){
       var other = self.world.at(self.row, value);
       // other creature detected
       if(other){
         self.algo('on_creature', other);  // other creature detected
         return;
       }else{
-        self.world.matrix[self.row][value] = self.id;
+        self.world.matrix[self.row][newCol] = self.id;
         self.world.matrix[self.row][self.col] = -1;
-        self.col = value;  // change col prop.
+        self.col = newCol;  // change col prop.
         // exec creature algorithm
         self.algo('on_nothing', {row:self.row,col:self.col});
-        //if(!checkOutNextAct()) return;
       }
     }
     self.body.style.left = left +'px';  // move body
   };
 
-  function changeRow(top){var value = 0;
+  function changeRow(top, newRow){
     top = (top < 0)?0:top;
-    if(self.dir == 'south'){
-      value = Math.ceil(top / self.world.unit);
-    }else if(self.dir == 'north') value = Math.floor(top / self.world.unit);
-    // on row change
-    if(value != self.row){
-      var other = self.world.at(value, self.col);
+    if(newRow != self.row){
+      var other = self.world.at(newRow, self.col);
       if(other){
         self.algo('on_creature', other);  // other creature detected
         return;
       }else{
         // exec creature algorithm
         self.algo('on_nothing', {row:self.row,col:self.col});
-        self.world.matrix[value][self.col] = self.id;
+        self.world.matrix[newRow][self.col] = self.id;
         self.world.matrix[self.row][self.col] = -1;
-        self.row = value;  // change row prop.
+        self.row = newRow;  // change row prop.
         // adjust zIndex
-        self.body.style.zIndex = value;
+        self.body.style.zIndex = newRow;
       }
     }
     self.body.style.top = top +'px';  // move body
@@ -304,4 +304,15 @@ W.Creature.prototype.resume = function(){
  */
 W.Creature.prototype.talk = function(msg){
 	this.world.messages[this.world.messages.length] = this.name +': '+ msg;
+};
+
+
+/**
+ * algorithm
+ */
+W.Creature.prototype.algo = function(event, arg){
+	var evt = this.events[event];
+	if (typeof evt != 'undefined') {
+  	evt(arg);
+  };
 };
