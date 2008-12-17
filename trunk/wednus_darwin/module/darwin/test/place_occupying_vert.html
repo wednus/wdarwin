@@ -27,16 +27,17 @@ var creature = new W.Creature({
   uheight: 2
 });
 // add skills
-creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
   north: '0:0,0:48,0:96',
   east:  '48:0,48:48,48:96',
   south: '96:0,96:48,96:96',
   west:  '144:0,144:48,144:96'
-}));
+});
+creature.add(walk);
 
 // define the creature algorithm
 creature.algo = function(event, arg){
-  this.does(this.skills['walk'], 'random');
+  this.does(walk, 'random');
 };
 
 world.add(creature.clone(), 0, 0);

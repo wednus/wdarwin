@@ -36,11 +36,7 @@ lemming.add(walk);
 
 document.body.appendChild(lemming.body);
 lemming.resize(24);
-
-// define the creature algorithm
-lemming.algo = function(creature){
-  this.does(walk);
-};
+lemming.does(walk);
 
 // add to world
 world.add(lemming);

@@ -26,17 +26,14 @@ var villager = new W.Creature({
 });
 
 // add skills
-villager.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/villager.png',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/uiv2.com/villager.png',
   north: '144:4,144:36,144:68,144:98',
   east:  '96:4,96:36,96:68,96:98',
   south: '0:4,0:36,0:68,0:98',
   west:  '48:4,48:36,48:68,48:98'
-}));
-
-// define the creature algorithm
-villager.algo = function(creature){
-  this.does(this.skills['walk']);
-};
+});
+villager.add(walk);
+villager.does(walk);
 
 // add to world
 world.add(villager);

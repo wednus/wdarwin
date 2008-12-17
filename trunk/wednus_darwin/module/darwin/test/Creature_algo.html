@@ -29,13 +29,6 @@ var boy = new W.Creature({
 world.add(boy);
 
 // add skills
-var turn = new W.Skill({name: 'turn', img: 'module/darwin/test/image/walk.gif',
-  north: '0:0',
-  east:  '48:0',
-  south: '96:0',
-  west:  '144:0'
-});
-boy.add(turn);
 var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
   north: '0:0,0:48,0:96',
   east:  '48:0,48:48,48:96',
@@ -46,15 +39,15 @@ boy.add(walk);
 boy.act = 'walk'; // default action
 
 // define the creature algorithm
-boy.algo = function(facesTo, other){
-	switch(facesTo){
-		case 'wall':
+boy.algo = function(event, other){
+	switch(event){
+		case 'on_wall':
       this.does(walk, 'random');
 			break;
-		case 'creature':
+		case 'on_creature':
       this.does(walk, other.dir);
       break;
-	  case 'nothing':
+	  case 'on_nothing':
       break;
 	  default:
 	};

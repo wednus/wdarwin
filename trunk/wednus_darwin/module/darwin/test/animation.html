@@ -27,24 +27,18 @@ var creature = new W.Creature({
   speed: 4
 });
 
-// add skills
-creature.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
   north: '0:0,0:48,0:96',
   east:  '48:0,48:48,48:96',
   south: '96:0,96:48,96:96',
   west:  '144:0,144:48,144:96'
-}));
-
-// define the creature algorithm
-creature.algo = function(creature){
-  this.does(this.skills['walk']);
-};
-
+})
+// add skills
+creature.add(walk);
+creature.does(walk);
 
 // add to the world
 world.add(creature);
-
-window.status = creature.img.style.left;
 </script>
 </head>
 <body style='background:black'>

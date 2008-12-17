@@ -26,18 +26,15 @@ var boy = new W.Creature({
   speed: 5
 });
 
-// add skills
-boy.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/rock_cn_sprites/rockchinesesprites.gif',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/rock_cn_sprites/rockchinesesprites.gif',
   north: '430:50,430:100,430:50,430:150,430:200,430:150',
   east:  '630:50,630:100,630:50,630:150,630:200,630:150',
   south: '330:50,330:100,330:50,330:150,330:200,330:150',
   west:  '530:150,530:100,530:150,530:50,530:0,530:50'
-}));
-
-// define the creature algorithm
-boy.algo = function(creature){
-  this.does(this.skills['walk']);
-};
+})
+// add skills
+boy.add(walk);
+boy.does(walk);
 
 // add to world
 world.add(boy);
