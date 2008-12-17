@@ -32,25 +32,20 @@ var human = new W.Creature({
   uheight: 2
 });
 
-// add skills
-human.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
   north: '0:0,0:48,0:96',
   east:  '48:0,48:48,48:96',
   south: '96:0,96:48,96:96',
   west:  '144:0,144:48,144:96'
-}));
+});
+// add skills
+human.add(walk);
 
-// define the creature algorithm
-// define the creature algorithm
-human.algo = function(event, arg){
-  switch(event){
-    case 'on_wall':
-      this.does(this.skills['walk'], 'random');
-      break;
-    case 'on_creature':
-      this.does(this.skills['walk'], 'random');
-      break;
-  }
+human.events['on_wall'] = function(){
+  human.does(walk, 'random');	
+};
+human.events['on_creature'] = function(){
+  human.does(walk, 'random');
 };
 
 
@@ -69,12 +64,13 @@ turtlex.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/kileen/wal
   west:  '144:0,144:48,144:96'
 }));
 
-// define the creature algorithm
-turtlex.algo = human.algo;
+// define the creature events
+for(var i; i < human.events.length; ++i){
+	turtlex.events[i] = human.events[i];
+};
 
 world.add(turtlex);
 world.add(human);
-
 
 for(var i = 0; i < 5; ++i){
   world.add(turtlex.clone());
