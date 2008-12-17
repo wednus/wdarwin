@@ -61,6 +61,28 @@ W.Creature = function(args){var self = this;
     this.body.style.height = this.height +'px';
   };
 
+	/**
+	 * stop moving
+	 */
+	this.stop = function(){
+	  this.speed_backup = this.speed;
+	  this.speed = 0;
+	};
+		
+	/**
+	 * resume the latest action (skill) in backup speed
+	 */
+	this.resume = function(){
+	  this.speed = this.speed_backup;
+	};
+		
+	/**
+	 * talk
+	 */
+	this.talk = function(msg){
+	  this.world.messages[this.world.messages.length] = this.name +': '+ msg;
+	};
+
   // extend/override constructor w/ passed args object
   for(var i in args)
     eval('this.'+ i +' = args["'+ i +'"];');
@@ -74,11 +96,6 @@ W.Creature = function(args){var self = this;
  * @note 'a skill' is an object with definitions of an animation
  * @test <a href='../../test/Creature_add.html'>add a skill (walking)</a>
  * @test <a href='../../test/walkaround_reymond.html'>add creature (1-frame: animation gif)</a>
- * @test <a href='../../test/walkaround_chocobo.html'>add creature (4-frame)</a>
- * @test <a href='../../test/walkaround_villager.html'>add creature (4-frame)</a>
- * @test <a href='../../test/walkaround_rock_cn_sprites.html'>add creature (6-frame)</a>
- * @test <a href='../../test/walkaround_lemming.html'>add creature (8-frame)</a>
- * @test <a href='../../test/walkaround_gorgon.html'>add creature (4 uwidth/uheight sprite)</a>
  */
 W.Creature.prototype.add = function(skill){
   // allow skill to refer creature it added to
@@ -117,8 +134,6 @@ W.Creature.prototype.clone = function(){
  * perform current action
  *
  * @test <a href='../../test/Creature_algo.html'>Creature.algo()</a>
- * @test <a href='../../test/place_occupying_hori.html'>test changeCol</a>
- * @test <a href='../../test/place_occupying_vert.html'>test changeRow</a>
  * @test <a href='../../test/place_occupying.html'>test changeCol/changeRow</a>
  */
 //W.Creature.prototype.action = function(act){var self = this;
@@ -168,7 +183,7 @@ W.Creature.prototype.action = function(){var self = this;
     left = (left < 0)?0:left;
     // on column change
     if(newCol != self.col){
-      var other = self.world.at(self.row, value);
+      var other = self.world.at(newCol, value);
       // other creature detected
       if(other){
         self.algo('on_creature', other);  // other creature detected
@@ -279,31 +294,6 @@ W.Creature.prototype.does = function(skill, target){
     this.dir = absDir;		
   }
 	this.act = skill.name;
-};
-
-
-/**
- * stop moving
- */
-W.Creature.prototype.stop = function(){
-	this.speed_backup = this.speed;
-	this.speed = 0;
-};
-
-
-/**
- * resume the latest action (skill) in backup speed
- */
-W.Creature.prototype.resume = function(){
-  this.speed = this.speed_backup;
-};
-
-
-/**
- * talk
- */
-W.Creature.prototype.talk = function(msg){
-	this.world.messages[this.world.messages.length] = this.name +': '+ msg;
 };
 
 
