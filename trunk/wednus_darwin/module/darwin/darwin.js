@@ -16,7 +16,8 @@ W.darwin = {
 
 
 //!\cond    startup_batch
-W.load('module/darwin', 'Oracle,World,Skill,Creature,instructions', 'module');
+W.load('module/')
+W.load('module/darwin', 'Oracle,World,Skill,Creature', 'module');
 //!\endcond
 
 /**
