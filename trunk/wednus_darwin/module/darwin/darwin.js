@@ -10,14 +10,13 @@
  * @test <a href='../../test/darwin.html'>base setup</a>
  */
 W.darwin = {
-  version: '0.1.0',
+  version: '0.2.1',
   oracles: []
 };
 
 
 //!\cond    startup_batch
-W.load('module/')
-W.load('module/darwin', 'Oracle,World,Skill,Creature', 'module');
+W.load('module/darwin', 'World,Skill,Creature', 'module');
 //!\endcond
 
 /**
@@ -31,8 +30,6 @@ Sundew H. Shin - <a href='http://wednus.com'>Wednus Project</a>
 Wednus Darwin is the set of implementations of the Darwinian evolution workspace
 components; time, place, and creatures.
 Wednus Darwin is a method kit loads up followings classes and class extensions:
-- <b>W.Oracle class</b> - The Oracle introduces the concept of time to the objects with
-the receptor method.: .tick()
 - <b>W.World class</b> - The World provides a creatures' workspace where they
 interact each other.
 - <b>W.Skill class</b> - The Skill defines a prototype of an animation action of Creature
