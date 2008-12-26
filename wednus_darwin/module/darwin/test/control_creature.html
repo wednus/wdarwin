@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+</script>
+
+<script type="text/javascript">
+// define an oracle
+var oracle = new W.Oracle();
+// define a world
+var world = new W.World({
+   top: 12,
+   left: 12,
+   cols: 11,
+   rows: 13,
+	 delay: 4,
+   image: 'module/darwin/test/image/underground.jpg'
+});
+oracle.add(world);
+
+// define a creature
+var boy = new W.Creature({
+  uwidth: 2,
+  uheight: 2,
+});
+world.add(boy, 4, 1);
+
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0,0:48,0:96',
+  east:  '48:0,48:48,48:96',
+  south: '96:0,96:48,96:96',
+  west:  '144:0,144:48,144:96'
+});
+var stand = new W.Skill({name: 'stand', img: 'module/darwin/test/image/walk.gif',
+  north: '0:0',
+  east:  '48:0',
+  south: '96:0',
+  west:  '144:0'
+});
+boy.add(walk);
+boy.add(stand);
+
+boy.control(true);
+boy.does(stand);
+boy.stop();
+
+
+var toggleBit = 0;
+
+// define the creature algorithm
+boy.algo = function(event, arg){
+  var dir = ['west', 'north', 'east', 'south'];
+  switch(event){
+	  case 'on_keydown':
+		  if (!toggleBit) {
+	  	  this.dir = dir[arg - 37];
+	  	  this.does(walk);
+	  	  this.resume();
+	  	  toggleBit = 1;
+	    }
+			break;
+    case 'on_keyup':
+      this.does(stand);
+      this.stop();
+      toggleBit = 0;
+			break;
+  };
+};
+</script>
+</head>
+<body style='background:black'>
+</body></html>

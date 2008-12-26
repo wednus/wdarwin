@@ -157,7 +157,6 @@ W.World.prototype.tick = function(){
 		this.msg_delay = this.preset_msg_delay;
 		this.messages.shift();
 	};
-	
 };
 
 
