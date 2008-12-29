@@ -302,3 +302,17 @@ W.World.prototype.fitToBackground = function(){var self = this;
   W.style(this.body, 'width:'+ back.width +'px;height:'+ back.height +'px;');
   this.body.style.background = 'url('+ backPath +')';
 };
+
+
+/**
+ * hide/unhide the world's presentation layer
+ *
+ * @param {Boolean} isHide true for hide the world
+ */
+W.World.prototype.hide = function(isHide){
+	if(isHide){
+		this.body.style.display = 'none';
+	}else{
+    this.body.style.display = 'block';		
+	};
+};
