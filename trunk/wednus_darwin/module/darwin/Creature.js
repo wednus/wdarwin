@@ -36,6 +36,8 @@ W.Creature = function(args){var self = this;
   this.add(new W.Skill());
   this.act = 'hide';
   this.dir = 'south';
+	// control focus on/off
+	this.focus = false;
   // visual components
   this.img = document.createElement('img');
   this.img.title = this.id + ' : '+ this.name;
@@ -294,6 +296,8 @@ W.Creature.prototype.does = function(skill, target){
     this.dir = absDir;		
   }
 	this.act = skill.name;
+	if(typeof skill.speed != 'undefined')
+	  this.speed = skill.speed;
 };
 
 
@@ -305,4 +309,29 @@ W.Creature.prototype.algo = function(event, arg){
 	if (typeof evt != 'undefined') {
   	evt(arg);
   };
+};
+
+
+/**
+ * control
+ */
+W.Creature.prototype.control = function(isControllable){var self = this;
+  if(!isControllable){
+    this.focus = false;
+  }else{
+    this.focus = true;
+    W.event(document, 'onkeydown', onkeydownHandler);
+    W.event(document, 'onkeyup', onkeyupHandler);
+	};
+
+	var keys = [];
+	function onkeydownHandler(e){if(!e) e = window.event;
+    keys[e.keyCode] = true;
+    if(self.focus) self.algo('on_key', keys);
+	};
+	
+	function onkeyupHandler(e){if(!e) e = window.event;
+    keys[e.keyCode] = false;
+    if(self.focus) self.algo('on_key', keys);
+	};
 };
