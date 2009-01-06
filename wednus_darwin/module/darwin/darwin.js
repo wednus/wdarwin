@@ -10,19 +10,19 @@
  * @test <a href='../../test/darwin.html'>base setup</a>
  */
 W.darwin = {
-  version: '0.2.1',
+  version: '0.2.2',
   oracles: []
 };
 
 
 //!\cond    startup_batch
-W.load('module/darwin', 'World,Skill,Creature', 'module');
+W.load('module/darwin', 'World,Place,Skill,Creature', 'module');
 //!\endcond
 
 /**
 \mainpage
 \section version Version
-0.2.0
+0.2.1
 \section author Author
 Sundew H. Shin - <a href='http://wednus.com'>Wednus Project</a>
 <hr>
@@ -32,6 +32,8 @@ components; time, place, and creatures.
 Wednus Darwin is a method kit loads up followings classes and class extensions:
 - <b>W.World class</b> - The World provides a creatures' workspace where they
 interact each other.
+- <b>W.Place class</b> - The Place defines visual elements (background) and
+manages creature matrix.
 - <b>W.Skill class</b> - The Skill defines a prototype of an animation action of Creature
 - <b>W.Creature class</b> - The Creature defines a prototype of common creature
 residing in a world.
