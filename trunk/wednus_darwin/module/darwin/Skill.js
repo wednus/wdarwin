@@ -23,7 +23,7 @@ W.Skill = function(args){var self = this;
   this.north = '0:0';
   this.south = '0:0';
   this.dir = 'south';  // current direction
-  this.frame = 0;  // current frame
+  this.frame = 0; // current frame
   // place holder for creature which this skill added
   this.creature = {getAbsDir: new Function()};
   // do this skiil toward the given direction

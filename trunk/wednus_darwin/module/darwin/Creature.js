@@ -15,7 +15,13 @@
  * @test <a href='../../test/Creature.html'>default construction</a>
  */
 W.Creature = function(args){var self = this;
-  // creature ID; -1 for wall
+  // animation image offset
+  this.top = 0;
+  this.left = 0;
+  // actual location on a place
+  this.top_onPlace = 0;
+  this.left_onPlace = 0;
+  // creature ID; -2 for wall
   this.id = 0;
 	this.name = 'no name';
   // position coordinate on a world
@@ -41,8 +47,13 @@ W.Creature = function(args){var self = this;
   // visual components
   this.img = document.createElement('img');
   this.img.title = this.id + ' : '+ this.name;
+
+  // extend/override constructor w/ passed args object
+  for(var i in args)
+    eval('this.'+ i +' = args["'+ i +'"];');
+
   this.img = W.style('img', 'position:absolute;left:-1000px;');
-  this.body = W.style('div', 'position:absolute;top:0px;left:0px;overflow:hidden;');
+  this.body = W.style('div', 'position:absolute;overflow:hidden;');
   this.body.appendChild(this.img);
   // attach event handlers
   this.body.onclick = function(){self.algo('on_click');};
@@ -84,10 +95,6 @@ W.Creature = function(args){var self = this;
 	this.talk = function(msg){
 	  this.world.messages[this.world.messages.length] = this.name +': '+ msg;
 	};
-
-  // extend/override constructor w/ passed args object
-  for(var i in args)
-    eval('this.'+ i +' = args["'+ i +'"];');
 };
 
 
@@ -142,84 +149,88 @@ W.Creature.prototype.clone = function(){
 W.Creature.prototype.action = function(){var self = this;
   // manage sprite
   this.skills[this.act].animate();
+  // do nothing on zero speed
+  if(this.speed <= 0) return;
+
   // move creature
-  var bodyPos = 0;
-	var newCoor = 0;
-  if(this.dir == 'north' || this.dir == 'south'){
-    bodyPos = parseInt(this.body.style.top);
-  }else bodyPos = parseInt(this.body.style.left);
+  var bodyPos, coor;
+  if (this.dir == 'north' || this.dir == 'south') {
+    bodyPos = this.top_onPlace; //parseInt(this.body.style.top);
+  }else{
+    bodyPos = this.left_onPlace; //bodyPos = parseInt(this.body.style.left);
+  }
   // handle dir
   switch(this.dir){
     case 'north':
-      bodyPos -= this.speed;
-			newCoor = Math.ceil(bodyPos / this.world.unit);
-      if(bodyPos >  -this.speed){
-        changeRow(bodyPos, newCoor);
-      }else this.algo('on_wall'); // hit the edge
+    case 'west':
+      bodyPos = ((bodyPos - this.speed) < 0)?0:bodyPos - this.speed;
+      //coor = parseInt((bodyPos - this.top) / this.world.unit);
       break;
     case 'south':
-      bodyPos += this.speed;
-      newCoor = Math.ceil(bodyPos / this.world.unit)
-      if(bodyPos < this.maxTop + this.speed && newCoor < this.world.rows){
-        changeRow(bodyPos, newCoor);
-      }else this.algo('on_wall'); // hit the edge
+      bodyPos = ((bodyPos + this.speed) > this.maxTop)?this.maxTop:bodyPos+this.speed;
       break;
     case 'east':
-      bodyPos += this.speed;
-      newCoor = Math.ceil(bodyPos / this.world.unit);
-      if(bodyPos < this.maxLeft + this.speed && newCoor < this.world.cols){
-        changeCol(bodyPos, newCoor);
-      }else this.algo('on_wall'); // hit the edge
+      bodyPos = ((bodyPos + this.speed) > this.maxLeft)?this.maxLeft:bodyPos+this.speed;
+      //coor = parseInt((bodyPos - this.left) / this.world.unit);
       break;
-    case 'west':
-      bodyPos -= this.speed;
-			newCoor = Math.floor(bodyPos / this.world.unit);
-      if(bodyPos > -this.speed){
-        changeCol(bodyPos, newCoor);
-      }else this.algo('on_wall'); // hit the edge
-      break;
+  };
+  // change coor if necessary
+  coor = parseInt(bodyPos / this.world.unit);
+  if(this.dir == 'north' || this.dir == 'south'){
+    if (this.row != coor) changeCoor(coor, this.col);
+    this.top_onPlace = moveTo(bodyPos, 1, this.place.vertScrollStart, this.place.vertScrollEnd);
+  }else{
+    if(this.col != coor) changeCoor(this.row, coor);
+    this.left_onPlace = moveTo(bodyPos, 0, this.place.horiScrollStart, this.place.horiScrollEnd);
+  }
+
+  function moveTo(pos, isVerticalMove, start, end){
+    var grid, target, halfWorld, onWall = false;
+    if (isVerticalMove){
+      grid = self.place.grid.style.top;
+      target = self.body.style.top;
+      halfWorld = self.halfHeight;
+      if(pos == 0 || pos == self.maxTop) onWall = true;
+    }else{
+      grid = self.place.grid.style.left;
+      target = self.body.style.left;
+      halfWorld = self.halfWidth;
+      if(pos == 0 || pos == self.maxLeft) onWall = true;
+    }     
+    // scroll place if necessary
+    if (pos > start && pos <= end) {
+      grid = -(pos - halfWorld) + 'px';
+      //return (pos - parseInt(grid));
+      return pos;
+    }
+    
+    target = pos + 'px'; // move body
+    window.status = 'target:'+ target +', pos:'+ pos;
+    if(onWall) self.algo('on_wall');
+    return pos;
   };
 
   //@TODO handle multi-unit creatures
-  function changeCol(left, newCol){var value = 0;
-    left = (left < 0)?0:left;
-    // on column change
-    if(newCol != self.col){
-      var other = self.world.at(newCol, value);
-      // other creature detected
-      if(other){
-        self.algo('on_creature', other);  // other creature detected
-        return;
-      }else{
-        self.world.matrix[self.row][newCol] = self.id;
-        self.world.matrix[self.row][self.col] = -1;
-        self.col = newCol;  // change col prop.
-        // exec creature algorithm
-        self.algo('on_nothing', {row:self.row,col:self.col});
-      }
+  function changeCoor(row, col){
+    var other = self.place.at(row, col);
+    // other creature detected
+    if (other) {
+      self.algo('on_creature', other); // other creature detected
+      return;
     }
-    self.body.style.left = left +'px';  // move body
-  };
-
-  function changeRow(top, newRow){
-    top = (top < 0)?0:top;
-    if(newRow != self.row){
-      var other = self.world.at(newRow, self.col);
-      if(other){
-        self.algo('on_creature', other);  // other creature detected
-        return;
-      }else{
-        // exec creature algorithm
-        self.algo('on_nothing', {row:self.row,col:self.col});
-        self.world.matrix[newRow][self.col] = self.id;
-        self.world.matrix[self.row][self.col] = -1;
-        self.row = newRow;  // change row prop.
-        // adjust zIndex
-        self.body.style.zIndex = newRow;
-      }
-    }
-    self.body.style.top = top +'px';  // move body
-  };
+    var matrix;
+    matrix = self.place.matrix;
+    matrix[row][col].cell.style.background = 'navy';
+    matrix[row][col].id = self.id;
+    matrix[self.row][self.col].cell.style.background = 'transparent';
+    matrix[self.row][self.col].id = -1;
+    self.row = row; // change row prop.
+    self.col = col; // change col prop.
+    // adjust zIndex
+    self.body.style.zIndex = row;
+    // exec creature algorithm
+    self.algo('on_nothing', {row:row, col:col});
+  };  
 };
 
 
@@ -232,6 +243,7 @@ W.Creature.prototype.action = function(){var self = this;
  * 'rturn,left,right,backward,north,east,south,west'
  */
 W.Creature.prototype.getAbsDir = function(rDir){
+  var numOfTurns;
   var absDir = ['north', 'east', 'south', 'west'];
   var relDir = ['front', 'right', 'rear', 'left'];
   // bypass it if the argument is absDir
@@ -247,6 +259,7 @@ W.Creature.prototype.getAbsDir = function(rDir){
   		var first = absDir.shift();
   		absDir.push(first);
   	}
+    if(relDir.indexOf(rDir == -1)) return false;
   	return absDir[relDir.indexOf(rDir)];
   }
 	return false;
@@ -270,16 +283,17 @@ W.Creature.prototype.isAonB = function(A, B){
   // convert relative dir.('front',..) to absolute dir.('north',..)
   while(true){
     switch(B){
-      case 'north': return (A == this.world[this.col][--this.row]);
-      case 'east': return (A == this.world[++this.col][this.row]);
-      case 'south': return (A == this.world[this.col][++this.row]);
-      case 'west': return (A == this.world[--this.col][this.row]);
+      case 'north': return (A == this.place[this.col][--this.row]);
+      case 'east': return (A == this.place[++this.col][this.row]);
+      case 'south': return (A == this.place[this.col][++this.row]);
+      case 'west': return (A == this.place[--this.col][this.row]);
       case 'front':
       case 'right':
       case 'rear':
       case 'left': B = this.getAbsDir(B);
     }
   };
+  return true;
 };
 
 
