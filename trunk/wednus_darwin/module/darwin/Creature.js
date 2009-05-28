@@ -39,6 +39,7 @@ W.Creature = function(args){var self = this;
   this.speed = 6;
   this.skills = [];
 	this.events = [];
+  this.palce = new W.Place();
   this.add(new W.Skill());
   this.act = 'hide';
   this.dir = 'south';
