@@ -15,9 +15,15 @@ var world = new W.World({
     cols: 3,
     rows: 4
 });
-world.showGrid(true);
 world.delay = 4;
 oracle.add(world);
+// define place
+var place = new W.World({
+    cols: 3,
+    rows: 4
+});
+
+place.showGrid(true);
 
 // define creatures
 var human = new W.Creature();
@@ -33,8 +39,8 @@ human.add(new W.Skill({name: 'walk', img: 'module/darwin/test/image/walk.gif',
 
 world.add(human);
 
-world.set('0:1');
-world.set('1:1');
+place.set('0:1');
+place.set('1:1');
 
 
 // define the creature algorithm
