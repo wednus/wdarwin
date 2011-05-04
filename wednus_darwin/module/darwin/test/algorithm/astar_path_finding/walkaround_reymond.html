@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Wednus Darwin</title>
+<script type='text/javascript' src='../../../../../wednus_compact.js'></script>
+<script type='text/javascript'>
+W.module('darwin');
+W.include('module/darwin/test/algorithm/astar_path_finding/reference', 'AStar_memtronic');
+</script>
+
+<script type='text/javascript'>
+// define an oracle
+var oracle = new W.Oracle();
+// define a world
+var world = new W.World({
+   unit: 32 // pixels per unit
+});
+world.showGrid(true);
+world.full();
+oracle.add(world);
+
+var reynold = new W.Creature({
+  act: 'walk',
+  dir: 'south'
+});
+var walk = new W.Skill({name: 'walk', img: 'module/darwin/test/image/reymond/boy.gif',
+  north: '0:0',
+  east:  '0:32',
+  south: '32:0',
+  west:  '32:32'
+});
+// add skills
+reynold.add(walk);
+// define the creature algorithm
+reynold.algo = function(event, arg){
+	switch(event){
+    case 'on_creature':
+		case 'on_wall':
+		  this.does(walk, 'random');
+			break;
+    default:
+	}
+};
+// add to world
+world.add(reynold);
+
+var stone = new W.Creature({
+  act: 'stand',
+  dir: 'south',
+	speed: 0
+});
+var stand = new W.Skill({
+  name: 'stand',img: 'module/darwin/test/algorithm/astar_path_finding/reference/obstacle.gif',
+  south: '0:0'
+});
+stone.add(stand);
+
+var tmp;
+for (var i = 0; i < world.rows; ++i) {
+	for (var j = 0; j < world.cols; ++j) {
+		if (Math.random() < 0.3 && !world.at(i, j)) {
+			tmp = stone.clone();
+			tmp.img.width = 32;
+			world.add(tmp, i, j);
+		}
+	}
+}
+</script>
+</head>
+<body background=reference/table-bg.gif>
+</body></html>
