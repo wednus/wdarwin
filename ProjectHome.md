@@ -1,0 +1,1 @@
+Wednus Darwin was originally developed to simulate the Darwin's world in Java for a class, and it ported into Javascript in 2006. It is the set of implementations of the Darwinian revolution workspace components; time, place, and creatures. By utilizing this module, developers can create a workspace for interactive objects (creatures) fast from templates.
